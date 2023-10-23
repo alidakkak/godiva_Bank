@@ -16,14 +16,14 @@ class DatabaseSeeder extends Seeder
 
          \App\Models\User::factory()->create([
              'name' => 'SuperAdmin',
-             'email' => 'superadmin@gmail.com',
+//             'email' => 'superadmin@gmail.com',
              'type' => 'Super',
              'password' => '00000000'
          ]);
 
         \App\Models\User::factory()->create([
             'name' => 'Admin',
-            'email' => 'admin@gmail.com',
+//            'email' => 'admin@gmail.com',
             'serial_number' => '11111111',
             'type' => 'Admin',
             'password' => '00000000'
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'Cashier',
-            'email' => 'cashier@gmail.com',
+//            'email' => 'cashier@gmail.com',
             'serial_number' => '22222222',
             'type' => 'Cashier',
             'password' => '00000000'

@@ -11,6 +11,10 @@ class Customer extends Model
     protected $guarded = ['id'];
 
     public function voucher() {
-        return $this->hasMany(Voucher::class);
+        return $this->hasOne(Voucher::class);
+    }
+    public function images()
+    {
+        return $this->hasManyThrough(Image::class, Voucher::class);
     }
 }

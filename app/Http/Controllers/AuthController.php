@@ -9,58 +9,42 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
-    public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
-    /**
+    /*
      * Get a JWT via given credentials.
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request){
+    public function loginForCashier(Request $request){
         $validator = Validator::make($request->all(), [
-            'serial_number' => 'required',
+            'serial_number' => 'required|min:6|max:10',
             'password' => 'required|string|min:6',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        if (! $token = auth()->attempt($validator->validated())) {
+        $check= array_merge($validator->validated(), ["type"=>"Cashier"]);
+        if (! $token = auth()->attempt($check)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         return $this->createNewToken($token);
     }
 
-    /**
-     * Register a User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function register(Request $request) {
+    public function loginForAdmin(Request $request){
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
-            'type' => 'required|string',
-            'serial_number' => 'required|unique:users'
+            'serial_number' => 'required',
+            'password' => 'required|string|min:6',
         ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => bcrypt($request->password)]
-        ));
-        return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
-        ], 201);
+        $check= array_merge($validator->validated(), ["type"=>"Admin"]);
+        if (! $token = auth()->attempt($check)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        return $this->createNewToken($token);
     }
+
 
     /**
      * Log the user out (Invalidate the token).
@@ -71,22 +55,22 @@ class AuthController extends Controller
         auth()->logout();
         return response()->json(['message' => 'User successfully signed out']);
     }
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh() {
-        return $this->createNewToken(auth()->refresh());
-    }
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function userProfile() {
-        return response()->json(auth()->user());
-    }
+//    /**
+//     * Refresh a token.
+//     *
+//     * @return \Illuminate\Http\JsonResponse
+//     */
+//    public function refresh() {
+//        return $this->createNewToken(auth()->refresh());
+//    }
+//    /**
+//     * Get the authenticated User.
+//     *
+//     * @return \Illuminate\Http\JsonResponse
+//     */
+//    public function userProfile() {
+//        return response()->json(auth()->user());
+//    }
     /**
      * Get the token array structure.
      *
@@ -98,7 +82,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
+            'expires_in_by_minute' => auth()->factory()->getTTL(),
             'user' => auth()->user()
         ]);
     }

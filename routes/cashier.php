@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CustomerController;
 
+use App\Http\Controllers\Cashier\ExpenseController;
 use App\Http\Controllers\Cashier\VoucherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,5 @@ use Illuminate\Support\Facades\Route;
     // voucher
         Route::post('/store_new_voucher', [VoucherController::class, "store"]);
         Route::post('/store_existing_voucher', [VoucherController::class, "existing"]);
+        Route::post('/pay_by_voucher',[ExpenseController::class, "store"]);
     });

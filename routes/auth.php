@@ -16,8 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-        Route::post('auth/loginForCashier', [AuthController::class, 'loginForCashier']);
-        Route::post('auth/loginForAdmin', [AuthController::class, 'loginForAdmin']);
-    Route::group([ 'middleware' => 'check_user:Cashier,Admin'], function () {
+        Route::post('auth/login/{role}', [AuthController::class, 'login']);
+    Route::group([ 'middleware' => 'check_user:Cashier,Admin,Super'], function () {
         Route::post('/logout', [AuthController::class, 'logout']);
     });

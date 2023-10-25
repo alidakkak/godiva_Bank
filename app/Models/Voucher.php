@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Voucher extends Model
 {
     use HasFactory;
+    protected $guarded=[];
 
     public function customer() {
         return $this->belongsTo(Customer::class);
     }
     public function images() {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(VoucherItem::class);
     }
 }

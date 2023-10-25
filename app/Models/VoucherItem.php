@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Image extends Model
+class VoucherItem extends Model
 {
     use HasFactory;
-    protected $fillable=["path","voucher_id"];
+    protected $table="vouchers_items";
+    protected $fillable=["path","voucher_id","city"];
 }

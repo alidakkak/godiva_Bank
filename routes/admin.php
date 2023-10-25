@@ -16,12 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-    Route::group([ 'middleware' => 'check_user:Admin'], function () {
-    // customer
+
+    Route::group([ 'middleware' => 'check_user:Admin,Super'], function () {
+        // customer
         Route::get('/get_all_customers', [CustomerController::class, 'index']);
         Route::get('/get_five_last_customers_with_percentage', [CustomerController::class, "get_five_last_customers_with_percentage"]);
-    // voucher
+        Route::get('/get_expenses_for_customers', [CustomerController::class, "get_expenses"]);
+        // voucher
         Route::get('/get_voucher', [VoucherController::class, "index"]);
+        Route::get('/get_percentage', [VoucherController::class, "percentage"]);
         Route::get('/exportToExcel', [VoucherController::class, "exportToExcel"]);
         Route::get('/exportToPdf', [VoucherController::class, "exportToPdf"]);
-    });
+        });

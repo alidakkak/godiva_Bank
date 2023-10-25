@@ -32,6 +32,7 @@
         <th>Customer Id</th>
         <th>Created At</th>
         <th>Updated At</th>
+        <th>Account</th>
 
         <!-- Add more columns as needed -->
     </tr>
@@ -45,6 +46,7 @@
             <td>{{   $voucher->customer->id }}</td>
             <td>{{   $voucher->created_at}}</td>
             <td>{{   $voucher->updated_at}}</td>
+            <td>{{   $voucher->customer->net_total()}}</td>
             <!-- Add more columns as needed -->
         </tr>
     @endforeach

@@ -14,7 +14,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function loginForCashier(Request $request){
+    public function login(Request $request){
         $validator = Validator::make($request->all(), [
             'serial_number' => 'required|min:6|max:10',
             'password' => 'required|string|min:6',
@@ -22,28 +22,13 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        $check= array_merge($validator->validated(), ["type"=>"Cashier"]);
+        $check= array_merge($validator->validated(), ["type"=>$request->role]);
         if (! $token = auth()->attempt($check)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         return $this->createNewToken($token);
     }
 
-    public function loginForAdmin(Request $request){
-        $validator = Validator::make($request->all(), [
-            'serial_number' => 'required',
-            'password' => 'required|string|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-        $check= array_merge($validator->validated(), ["type"=>"Admin"]);
-        if (! $token = auth()->attempt($check)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-        return $this->createNewToken($token);
-    }
 
 
     /**

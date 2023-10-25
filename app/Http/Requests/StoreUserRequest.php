@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use FontLib\Table\Type\name;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreVoucherRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,9 @@ class StoreVoucherRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:3',
-            'number' => 'required|numeric|min:5',
-            'city'=>"required|in:jedda,dammam,riyadh",
-            'image' => 'required|string|base64image',
+            'serial_number' => 'required|numeric|unique:users,serial_number',
+            'type'=>"required|in:Super,Admin,Cashier",
+            'password'=>"required|min:5"
         ];
     }
 }

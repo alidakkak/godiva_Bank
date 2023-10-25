@@ -16,6 +16,7 @@ class ImageResourse extends JsonResource
     {
         return [
           "image_url"=>asset($this->path),
+          "city"=>$this->city,
         ];
     }
 }

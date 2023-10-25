@@ -26,6 +26,7 @@ class VouchersExport implements FromCollection, WithMapping, ShouldAutoSize, Wit
             $voucher->customer_id,
             $voucher->created_at,
             $voucher->updated_at,
+            $voucher->customer->net_total()
         ];
     }
 
@@ -38,6 +39,7 @@ class VouchersExport implements FromCollection, WithMapping, ShouldAutoSize, Wit
             'customer_id',
             'voucher_crated_at',
             'voucher_updated_at',
+            "account"
         ];
     }
 }

@@ -9,8 +9,11 @@ use App\Http\Resources\Admin\VoucherResourse;
 use App\Models\Customer;
 use App\Models\Voucher;
 use App\Traits\GeneralTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class VoucherController extends Controller
 {
@@ -18,12 +21,15 @@ class VoucherController extends Controller
 
 
     public function store(StoreVoucherRequest $request){
-       $old= Customer::where("name",$request->name)->where("phone",$request->number)->first();
+        $ImagePath=$this->store_image($request);
+      $old= Customer::where("name",$request->name)->where("phone",$request->number)->first();
        if ($old) {
            $old->images()->create([
-               "path" => $request->image,
+               "path" => $ImagePath,
                "voucher_id" => $old->voucher->id,
+               "city"=>$request->city,
            ]);
+           $old->voucher()->update(["updated_at"=>Carbon::now()]);
            $keys=["voucher"];
            $values=[VoucherResourse::make($old->voucher)];
            return  $this->returnData(201,$keys,$values);
@@ -36,10 +42,10 @@ class VoucherController extends Controller
        ]);
    $voucher=   $customer->voucher()->create();
       $customer->images()->create([
-                "path" =>  $request->image,
+                "path" =>$ImagePath,
                 "voucher_id" => $voucher->id,
+                "city"=>$request->city,
             ]);
-
        DB::commit();
             $keys=["voucher"];
             $values=[VoucherResourse::make($voucher)];
@@ -52,12 +58,15 @@ class VoucherController extends Controller
     }
     public function existing(ExistingVoucherRequest $request){
         try {
+            $ImagePath=$this->store_image($request);
             $old = Customer::where("name", $request->name)->first();
             if ($old) {
                 $old->images()->create([
-                    "path" => $request->image,
+                    "path" => $ImagePath,
                     "voucher_id" => $old->voucher->id,
+                    "city"=>$request->city,
                 ]);
+                $old->voucher()->update(["updated_at"=>Carbon::now()]);
                 $keys = ["voucher"];
                 $values = [VoucherResourse::make($old->voucher)];
                 return $this->returnData(201, $keys, $values);
@@ -69,6 +78,15 @@ class VoucherController extends Controller
     catch (\Exception $e){
             return $e->getMessage();
         }
+    }
+    public function store_image($request){
+        $decodedImage =$request->image;
+        $base64String = substr($decodedImage, strpos($decodedImage, ',') + 1);
+        $decodedImage = base64_decode($base64String);
+        $fileName = $request->name.time().'.jpg';
+        $filePath = 'images/'.$fileName;
+        Storage::disk('public')->put($filePath, $decodedImage);
+        return asset("api/download/images/".$fileName);
     }
 
 }

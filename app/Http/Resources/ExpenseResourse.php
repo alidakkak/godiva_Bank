@@ -19,6 +19,7 @@ class ExpenseResourse extends JsonResource
               "id"=>$this->id,
               "customer_id"=>$this->customer_id,
               "amount"=>$this->amount,
+            "image"=>asset($this->image),
               "created_at"=>$this->created_at->format('Y-m-d H:i:s'),
 
         ];

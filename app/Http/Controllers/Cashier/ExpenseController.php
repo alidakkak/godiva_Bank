@@ -47,7 +47,7 @@ use GeneralTrait;
         $fileName = $request->name.time().'.jpg';
         $filePath = 'images/'.$fileName;
         Storage::disk('public')->put($filePath, $decodedImage);
-        return asset("api/download/images/".$fileName);
+        return "api/download/images/".$fileName;
     }
 
 }

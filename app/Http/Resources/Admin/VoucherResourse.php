@@ -23,7 +23,7 @@ class VoucherResourse extends JsonResource
             'customer_id' => $this->customer_id,
             'customer_name' => $this->customer->name,
             'customer_phone'=>$this->customer->phone,
-            'voucher_path_images'=> ImageResourse::collection($this->images),
+            'voucher_Items'=> ImageResourse::collection($this->images),
             // Add more fields as needed
         ];
     }

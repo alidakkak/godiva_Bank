@@ -15,22 +15,9 @@ class CustomerController extends Controller
     use GeneralTrait;
     const divisor=1000;
     public function index(){
-       $customers= Customer::with("expenses","images")->paginate();
-       $keys=["customers"
-           ,"current_page"
-           ,"last_page"
-           ,"first_page_url"
-           ,"last_page_url"
-           ,"prev_page_url"
-           ,"next_page_url"
-           ];
-       $values=[CustomerResourse::collection($customers)
-                ,$customers->currentPage()
-                ,$customers->lastPage()
-                ,$customers->url(1)
-                ,$customers->url($customers->lastPage())
-                ,$customers->previousPageUrl()
-                , $customers->nextPageUrl()];
+       $customers= Customer::with("expenses","images")->get();
+       $keys=["customers"];
+       $values=[CustomerResourse::collection($customers)];
        return  $this->returnData(200,$keys,$values);
     }
     public function get_five_last_customers_with_percentage()

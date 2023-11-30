@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 
     Route::group([ 'middleware' => 'check_user:Admin,Super'], function () {
         // customer
-        Route::get('/get_all_customers', [CustomerController::class, 'index']);
         Route::get('/get_five_last_customers_with_percentage', [CustomerController::class, "get_five_last_customers_with_percentage"]);
         Route::get('/get_expenses_for_customers', [CustomerController::class, "get_expenses"]);
         // voucher

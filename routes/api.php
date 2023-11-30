@@ -19,4 +19,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([ 'middleware' => 'check_user:Cashier,Admin,Super'], function () {
     Route::get('/download/{folder}/{name}', [VoucherController::class, "download"]);
+    Route::get('/get_all_customers', [CustomerController::class, 'index']);
+
 });

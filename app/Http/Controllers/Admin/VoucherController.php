@@ -71,9 +71,9 @@ class VoucherController extends Controller
         $percentage_all_vouchers_in_dammam=0;
         $percentage_all_vouchers_in_riyadh=0;
         if (Voucher::count()!=0){
-            $percentage_all_vouchers_in_jedda=round(VoucherItem::where("city","jedda")->count("city") *100/VoucherItem::count("city"),2);
-            $percentage_all_vouchers_in_dammam=round(VoucherItem::where("city","dammam")->count("city") *100/VoucherItem::count("city"),2);
-            $percentage_all_vouchers_in_riyadh=round(VoucherItem::where("city","riyadh")->count("city") *100/VoucherItem::count("city"),2);
+            $percentage_all_vouchers_in_jedda=round(VoucherItem::where("city","jedda")->count("city") *100/VoucherItem::count("city"),0);
+            $percentage_all_vouchers_in_dammam=round(VoucherItem::where("city","dammam")->count("city") *100/VoucherItem::count("city"),0);
+            $percentage_all_vouchers_in_riyadh=round(VoucherItem::where("city","riyadh")->count("city") *100/VoucherItem::count("city"),0);
         }
         $keys=["percentage_total_voucher"
             ,"divisor_of_total_voucher"

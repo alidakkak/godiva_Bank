@@ -19,61 +19,23 @@ class VoucherController extends Controller
     const divisor=1000;
     public function index()
     {
-     $vouchers=Voucher::with(["customer","images"])->get();
+     $vouchers=Voucher::with(["customer","expenses"])->get();
         $vouchers= VoucherResourse::collection($vouchers);
         $keys = ['vouchers'];
         $values = [$vouchers];
         return $this->returnData(200, $keys, $values);
     }
 
-    public function exportToExcel()
-    {
-            try {
-                $fileName = 'voucher.xlsx';
-                $sourcePath = 'exports/' . $fileName; // Path to the generated Excel file
-                if(Storage::disk("public")->exists("exports/voucher.xlsx")){
-                    Storage::disk("public")->delete("exports/voucher.xlsx");
-                }
-                Excel::store(new VouchersExport, $sourcePath, 'public');
-                $keys = ['path_file_excel'];
-                $values = [asset("api/download/exports/voucher.xlsx")];
-                return $this->returnData(200, $keys, $values);
-            }
-            catch (\Exception $e) {
-                return "An error occurred: " . $e->getMessage();
-            }
-    }
-    public function exportToPdf()
-    {
-        try {
-            $vouchers = Voucher::with("customer")->get();
 
-            // Generate the PDF document
-            $pdf = PDF::loadView('pdf_template', ['vouchers' => $vouchers]);
-            // Save the PDF to a file
-            if(Storage::disk("public")->exists("exports/voucher.pdf")){
-                Storage::disk("public")->delete("exports/voucher.pdf");
-            }
-
-            Storage::disk('public')->put("exports/voucher.pdf", $pdf->output());
-            $keys = ['path_file_pdf'];
-            $values = [asset("api/download/exports/voucher.pdf")];
-
-            return $this->returnData(200, $keys, $values);
-        }
-        catch (\Exception $e) {
-            return "An error occurred: " . $e->getMessage();
-        }
-    }
     public function percentage(){
-        $percentage_all_vouchers=VoucherItem::count()/CustomerController::divisor;
+        $percentage_all_vouchers=Voucher::count();
         $percentage_all_vouchers_in_jedda=0;
         $percentage_all_vouchers_in_dammam=0;
         $percentage_all_vouchers_in_riyadh=0;
         if (Voucher::count()!=0){
-            $percentage_all_vouchers_in_jedda=round(VoucherItem::where("city","jedda")->count("city") *100/VoucherItem::count("city"),0);
-            $percentage_all_vouchers_in_dammam=round(VoucherItem::where("city","dammam")->count("city") *100/VoucherItem::count("city"),0);
-            $percentage_all_vouchers_in_riyadh=round(VoucherItem::where("city","riyadh")->count("city") *100/VoucherItem::count("city"),0);
+            $percentage_all_vouchers_in_jedda=round(Voucher::where("city","jedda")->count("city") *100/Voucher::count("city"),0);
+            $percentage_all_vouchers_in_dammam=round(Voucher::where("city","dammam")->count("city") *100/Voucher::count("city"),0);
+            $percentage_all_vouchers_in_riyadh=round(Voucher::where("city","riyadh")->count("city") *100/Voucher::count("city"),0);
         }
         $keys=["percentage_total_voucher"
             ,"divisor_of_total_voucher"

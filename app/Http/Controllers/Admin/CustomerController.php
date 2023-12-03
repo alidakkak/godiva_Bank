@@ -15,15 +15,15 @@ class CustomerController extends Controller
     use GeneralTrait;
     const divisor=1000;
     public function index(){
-       $customers= Customer::with("expenses","images")->get();
+       $customers= Customer::with("expenses","vouchers")->get();
        $keys=["customers"];
        $values=[CustomerResourse::collection($customers)];
        return  $this->returnData(200,$keys,$values);
     }
     public function get_five_last_customers_with_percentage()
     {
-        $percentage_customers=Customer::count()/CustomerController::divisor;
-        $last_five_customers=Customer::orderBy('id','desc')->limit(5)->get();
+        $percentage_customers=Customer::count();
+        $last_five_customers=Customer::with("vouchers")->orderBy('id','desc')->limit(5)->get();
         $keys=["percentage","divisor","last_five_customers"];
         $values=[$percentage_customers,CustomerController::divisor,CustomerResourse::collection($last_five_customers)];
         return  $this->returnData(200,$keys,$values);

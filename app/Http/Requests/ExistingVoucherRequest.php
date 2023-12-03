@@ -26,8 +26,7 @@ class ExistingVoucherRequest extends FormRequest
             'name' => 'required|string|min:3',
             'image' => 'required',
             'number_voucher'=>'required|numeric',
-//            'number' => 'required|numeric|min:5',
-//            'image' => 'required|string|base64image',
+            "amount" => 'required|numeric|min:1'
         ];
     }
 }

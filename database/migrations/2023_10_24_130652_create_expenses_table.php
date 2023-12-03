@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("customer_id")->nullable()->constrained("customers")->nullOnDelete();
             $table->foreignId("user_id")->nullable()->constrained("users")->nullOnDelete();
+            $table->foreignId("voucher_id")->nullable()->constrained("vouchers")->nullOnDelete();
             $table->string("image");
             $table->integer('amount');
             $table->string("city");

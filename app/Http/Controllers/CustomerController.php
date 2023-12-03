@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class CustomerController extends Controller
 {
     public function index() {
-        $cusromer = Customer::with('voucher')->get();
+        $cusromer = Customer::with("expenses","vouchers")->get();
         return $cusromer;
     }
 

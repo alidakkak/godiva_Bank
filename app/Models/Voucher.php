@@ -13,7 +13,7 @@ class Voucher extends Model
     public function customer() {
         return $this->belongsTo(Customer::class);
     }
-    public function images() {
-        return $this->hasMany(VoucherItem::class);
+    public function expenses() {
+        return $this->hasMany(Expense::class);
     }
 }

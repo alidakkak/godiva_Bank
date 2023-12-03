@@ -11,19 +11,21 @@ class Customer extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function voucher() {
-        return $this->hasOne(Voucher::class);
+    public function vouchers() {
+        return $this->hasMany(Voucher::class,"customer_id");
     }
-    public function images()
-    {
-        return $this->hasManyThrough(VoucherItem::class, Voucher::class);
-    }
+
     public function expenses()
     {
-        return $this->hasMany( Expense::class);
+        return $this->hasManyThrough( Expense::class,Voucher::class);
     }
     public function net_total(){
-       return (float) $this->images()->count() * Controller::voucher_value- $this->expenses->sum("amount");
+       return (float) $this->vouchers()->count() * Controller::voucher_value- $this->expenses->sum("amount");
 
-    }
+}
+public function net_total_by_id_voucher($number_voucher){
+    $voucher= Voucher::where("number_voucher",$number_voucher)->first();
+
+    return (float)  Controller::voucher_value- $voucher->expenses->sum("amount");
+}
 }

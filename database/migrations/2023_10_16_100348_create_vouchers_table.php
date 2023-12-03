@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
             $table->integer("number_voucher")->unique();
-            $table->foreignId('customer_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->string("city");
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->nullOnDelete();
             $table->timestamps();
           });
     }

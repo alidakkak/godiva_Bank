@@ -7,8 +7,10 @@ use App\Http\Requests\ExpensesRequest;
 use App\Http\Resources\ExpenseResourse;
 use App\Models\Customer;
 use App\Models\Expense;
+use App\Models\Voucher;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ExpenseController extends Controller
@@ -19,17 +21,20 @@ use GeneralTrait;
     {
         try {
             $ImagePath=$this->store_image($request);
-            $customer= Customer::where("name",$request->name)->first();
+            $customer= Voucher::where("number_voucher",$request->number_voucher)->first()->customer;
+
             if ($request->amount>Controller::voucher_value) {
-                return  $this->returnError("amount","amount must be smaller than voucher");
+                return  $this->returnError(200,"amount must be smaller than voucher");
             }
             if ($request->amount>$customer->net_total()) {
-                return  $this->returnError("amount","the customer doesn't have amount");
+                return  $this->returnError(200,"the customer doesn't have amount");
             }
 
              $expense=  $customer->expenses()->create([
                "amount" => $request->amount,
-               "image" => $ImagePath
+               "image" => $ImagePath,
+               "city" => $request->city,
+                "user_id"=>Auth::id(),
               ]);
             $keys = ["expense"];
             $values = [ExpenseResourse::make($expense)];

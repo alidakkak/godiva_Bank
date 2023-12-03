@@ -17,7 +17,7 @@ class VoucherResourse extends JsonResource
     {
 
         return [
-            'voucher_id' => '#'.$this->id,
+            'voucher_id' => '#'.$this->number_voucher,
             'voucher_created_at' =>$this->created_at->format('Y-m-d H:i:s'),
             'voucher_updated_at' =>$this->updated_at->format('Y-m-d H:i:s'),
             'customer_id' => $this->customer_id,

@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
             $table->foreignId("customer_id")->nullable()->constrained("customers")->nullOnDelete();
+            $table->foreignId("user_id")->nullable()->constrained("users")->nullOnDelete();
             $table->string("image");
             $table->integer('amount');
+            $table->string("city");
             $table->timestamps();
         });
     }

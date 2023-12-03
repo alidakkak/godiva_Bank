@@ -10,7 +10,7 @@ public function returnError($errNum, $msg)
 return response()->json([
 'status' => $errNum,
 'message' => $msg
-]);
+],$errNum);
 }
 
 
@@ -27,7 +27,7 @@ public function returnData($status,$keys,$values)
      $data=array_merge( ['status' => $status],array_combine($keys,$values));
         return response()->json([
             $data
-        ]);
+        ],$status);
 }
 
 }

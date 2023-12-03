@@ -22,25 +22,26 @@ class VoucherController extends Controller
 
     public function store(StoreVoucherRequest $request){
         $ImagePath=$this->store_image($request);
-      $old= Customer::where("name",$request->name)->where("phone",$request->number)->first();
+      $old= Voucher::where("number_voucher",$request->number_voucher)->first();
        if ($old) {
            $old->images()->create([
                "path" => $ImagePath,
-               "voucher_id" => $old->voucher->id,
+               "voucher_id" => $old->id,
                "city"=>$request->city,
            ]);
-           $old->voucher()->update(["updated_at"=>Carbon::now()]);
+           $old->update(["updated_at"=>Carbon::now()]);
            $keys=["voucher"];
-           $values=[VoucherResourse::make($old->voucher)];
+           $values=[VoucherResourse::make($old)];
            return  $this->returnData(201,$keys,$values);
        }
+
         DB::beginTransaction();
         try {
       $customer= Customer::create([
            "name" => $request->name,
            "phone"=>$request->number,
        ]);
-   $voucher=   $customer->voucher()->create();
+   $voucher=$customer->voucher()->create(["number_voucher"=>$request->number_voucher]);
       $customer->images()->create([
                 "path" =>$ImagePath,
                 "voucher_id" => $voucher->id,
@@ -59,17 +60,17 @@ class VoucherController extends Controller
     public function existing(ExistingVoucherRequest $request){
         try {
             $ImagePath=$this->store_image($request);
-            $old = Customer::where("name", $request->name)->first();
+            $old= Voucher::where("number_voucher",$request->number_voucher)->first();
             if ($old) {
                 $old->images()->create([
                     "path" => $ImagePath,
-                    "voucher_id" => $old->voucher->id,
+                    "voucher_id" => $old->id,
                     "city"=>$request->city,
                 ]);
-                $old->voucher()->update(["updated_at"=>Carbon::now()]);
-                $keys = ["voucher"];
-                $values = [VoucherResourse::make($old->voucher)];
-                return $this->returnData(201, $keys, $values);
+                $old->update(["updated_at"=>Carbon::now()]);
+                $keys=["voucher"];
+                $values=[VoucherResourse::make($old)];
+                return  $this->returnData(201,$keys,$values);
             }
 
             return $this->returnError(404,"the voucher not existing");
@@ -87,6 +88,33 @@ class VoucherController extends Controller
         $filePath = 'images/'.$fileName;
         Storage::disk('public')->put($filePath, $decodedImage);
         return "api/download/images/".$fileName;
+    }
+    public function check_voucher($route)
+    {
+        $voucher = Voucher::where("number_voucher", $route)->first();
+        if (!$voucher) {
+           return response([
+               "message"=>"voucher dont create",
+               "access"=>true
+           ],200);
+        }
+        elseif ($voucher->customer->net_total()<=0) {
+            return response([
+                "message"=>"blank",
+                "access"=>false,
+                "net_total"=>$voucher->customer->net_total(),
+            ],200);
+        }
+        elseif ($voucher->customer->net_total()>0) {
+
+            return response([
+                "message"=>"allowed voucher",
+                "access"=>true,
+                "net_total"=>$voucher->customer->net_total(),
+            ],200);
+        }
+
+
     }
 
 }

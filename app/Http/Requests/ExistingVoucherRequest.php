@@ -25,6 +25,7 @@ class ExistingVoucherRequest extends FormRequest
         return [
             'name' => 'required|string|min:3',
             'image' => 'required',
+            'number_voucher'=>'required|numeric',
 //            'number' => 'required|numeric|min:5',
 //            'image' => 'required|string|base64image',
         ];

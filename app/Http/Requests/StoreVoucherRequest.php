@@ -27,6 +27,7 @@ class StoreVoucherRequest extends FormRequest
             'number' => 'required|numeric|min:5',
             'city'=>"required|in:jedda,dammam,riyadh",
             'image' => 'required|string|base64image',
+            'number_voucher'=>'required|numeric'
         ];
     }
 }

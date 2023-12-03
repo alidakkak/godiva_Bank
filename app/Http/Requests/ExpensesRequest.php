@@ -25,7 +25,9 @@ class ExpensesRequest extends FormRequest
         return [
             "name"=>'required|exists:customers,name',
             'image'=>'required|string|base64image',
-            'amount'=>'required|numeric'
+            'amount'=>'required|numeric',
+            'city'=>"required|in:jedda,dammam,riyadh",
+            'number_voucher'=>'required|numeric|exists:vouchers,number_voucher',
         ];
     }
 }

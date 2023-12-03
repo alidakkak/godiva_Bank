@@ -47,6 +47,8 @@ class VoucherController extends Controller
         $voucher = $old_customer->vouchers()->create(
             [
                 "number_voucher" => $request->number_voucher,
+                "city" => $request->city,
+
             ]);
             if ($request->amount>Controller::voucher_value) {
                 return  $this->returnError(200,"amount must be smaller than voucher");

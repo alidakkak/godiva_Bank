@@ -20,8 +20,11 @@ class CustomerResourse extends JsonResource
               "name"=>$this->name,
               "number"=>$this->phone,
               "net_total"=>$this->net_total(),
+              "total_voucher"=>$this->total_voucher(),
               "created_at"=>$this->created_at->format('Y-m-d H:i:s'),
               "updated_at"=>$this->updated_at->format('Y-m-d H:i:s'),
+              "expenses"=>ExpenseResourse::collection($this->expenses),
+              "vouchers"=>$this->vouchers,
 
         ];
     }

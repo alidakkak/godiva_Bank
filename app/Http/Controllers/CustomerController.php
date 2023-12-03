@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CustomerResourse;
 use App\Models\Customer;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
@@ -10,7 +11,7 @@ class CustomerController extends Controller
 {
     public function index() {
         $cusromer = Customer::with("expenses","vouchers")->get();
-        return $cusromer;
+        return CustomerResourse::collection($cusromer);
     }
 
     public function show(Customer $customer) {

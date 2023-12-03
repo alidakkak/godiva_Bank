@@ -10,4 +10,8 @@ class Expense extends Model
 
     use HasFactory;
     protected $fillable=["amount","city","user_id","image","customer_id"];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

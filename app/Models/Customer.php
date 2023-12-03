@@ -20,9 +20,14 @@ class Customer extends Model
         return $this->hasManyThrough( Expense::class,Voucher::class);
     }
     public function net_total(){
-       return (float) $this->vouchers()->count() * Controller::voucher_value- $this->expenses->sum("amount");
+       return (float) $this->vouchers()->count() * Controller::voucher_value - $this->expenses->sum("amount");
 
 }
+
+    public function total_voucher(){
+        return (float) $this->expenses->sum("amount");
+
+    }
 public function net_total_by_id_voucher($number_voucher){
     $voucher= Voucher::where("number_voucher",$number_voucher)->first();
 

@@ -41,7 +41,7 @@ class VoucherController extends Controller
         if ($old_customer) {
             $old_voucher = $old_customer->vouchers()->where("number_voucher", $request->number_voucher)->first();
         if ($old_voucher) {
-            return $this->returnError(200,"This voucher already exists under the name ".
+            return $this->returnError(422,"This voucher already exists under the name ".
                 $old_customer->name." the phone ".$old_customer->phone);
         }
         $voucher = $old_customer->vouchers()->create(
@@ -114,10 +114,10 @@ else {
                 $voucher = $customer->vouchers()->where("number_voucher", $request->number_voucher)->first();
             if ($voucher ) {
             if ($request->amount>Controller::voucher_value) {
-                return  $this->returnError(200,"amount must be smaller than voucher");
+                return  $this->returnError(422,"amount must be smaller than voucher");
             }
             if ($request->amount>$customer->net_total_by_id_voucher($request->number_voucher)) {
-                return  $this->returnError(200,"the customer doesn't have amount");
+                return  $this->returnError(422,"the customer doesn't have amount");
             }
                 $voucher->expenses()->create([
                     "amount" => $request->amount,

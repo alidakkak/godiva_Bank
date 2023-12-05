@@ -23,7 +23,7 @@ class ExistingVoucherRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3',
+            'phone' => 'required|numeric',
             'image' => 'required',
             'number_voucher'=>'required|numeric',
             "amount" => 'required|numeric|min:1'

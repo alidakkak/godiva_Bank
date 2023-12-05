@@ -33,7 +33,7 @@ class VoucherController extends Controller
         $same_phone_but_change_name= Customer::where("name","!=",$request->name)->where("phone",$request->number)->first();
 
         if ($same_phone_but_change_name) {
-          return $this->returnError(200,"This phone already exists under the name ".$same_phone_but_change_name->name);
+          return $this->returnError(422,"This phone already exists under the name ".$same_phone_but_change_name->name);
         }
 
          $old_customer= Customer::where("name",$request->name)->where("phone",$request->number)->first();
@@ -51,11 +51,11 @@ class VoucherController extends Controller
 
             ]);
             if ($request->amount>Controller::voucher_value) {
-                return  $this->returnError(200,"amount must be smaller than voucher");
+                return  $this->returnError(422,"amount must be smaller than voucher");
             }
 
             if ($request->amount>$old_customer->net_total_by_id_voucher($request->number_voucher)) {
-                return  $this->returnError(200,"the customer doesn't have amount");
+                return  $this->returnError(422,"the customer doesn't have amount");
             }
         $voucher->expenses()->create([
             "amount" => $request->amount,
@@ -81,10 +81,10 @@ else {
             "city" => $request->city,
         ]);
     if ($request->amount>Controller::voucher_value) {
-        return  $this->returnError(200,"amount must be smaller than voucher");
+        return  $this->returnError(422,"amount must be smaller than voucher");
     }
     if ($request->amount>$customer->net_total_by_id_voucher($request->number_voucher)) {
-        return  $this->returnError(200,"the customer doesn't have amount");
+        return  $this->returnError(422,"the customer doesn't have amount");
     }
     $voucher->expenses()->create([
         "amount" => $request->amount,

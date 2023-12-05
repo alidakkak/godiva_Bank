@@ -154,7 +154,9 @@ else {
         if (!$voucher) {
            return response([
                "message"=>"voucher dont create",
-               "access"=>true
+               "access"=>true,
+               "net_total"=>Controller::voucher_value,
+
            ],200);
         }
         elseif ($voucher->customer->net_total_by_id_voucher($route)<=0) {

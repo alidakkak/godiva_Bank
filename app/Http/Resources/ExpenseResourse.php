@@ -17,6 +17,7 @@ class ExpenseResourse extends JsonResource
     {
         return [
               "id"=>$this->id,
+              "number_voucher"=>$this->voucher->number_voucher,
               "customer_id"=>$this->customer_id,
               "amount"=>$this->amount,
               "city"=>$this->city,

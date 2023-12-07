@@ -26,7 +26,9 @@ class ExistingVoucherRequest extends FormRequest
             'number' => 'required|numeric',
             'image' => 'required',
             'number_voucher'=>'required|numeric',
-            "amount" => 'required|numeric|min:1'
+            "amount" => 'required|numeric|min:1',
+            'city'=>"required|in:jedda,dammam,riyadh",
+
         ];
     }
 }

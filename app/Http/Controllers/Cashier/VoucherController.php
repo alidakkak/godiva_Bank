@@ -6,6 +6,7 @@ use App\Http\Requests\ExistingVoucherRequest;
 use App\Http\Requests\StoreVoucherRequest;
 use App\Http\Resources\Admin\VoucherResourse;
 use App\Models\Customer;
+use App\Models\Expense;
 use App\Models\Voucher;
 use App\Traits\GeneralTrait;
 use Carbon\Carbon;
@@ -106,7 +107,7 @@ else {
 
     }
     public function existing(ExistingVoucherRequest $request){
-        try {
+//        try {
 
             $ImagePath=$this->store_image($request);
             $customer= Customer::where("phone",$request->number)->first();
@@ -130,14 +131,38 @@ else {
                 $values = [VoucherResourse::make($voucher)];
                 return $this->returnData(201, $keys, $values);
             }
+             else   if (!$voucher ) {
+                    if ($request->amount>Controller::voucher_value) {
+                        return  $this->returnError(422,"amount must be smaller than voucher");
+                    }
+                    if ($request->amount>$customer->net_total_by_id_voucher($request->number_voucher)) {
+                        return  $this->returnError(422,"the customer doesn't have amount");
+                    }
 
+                    $new_voucher = $customer->vouchers()->create([
+                       "number_voucher"=>$request->number_voucher,
+                        "city"=>$request->city
+                    ]);
+
+                 $new_voucher->expenses()->create([
+                     "amount" => $request->amount,
+                     "city" => $request->city,
+                     "image" => $ImagePath,
+                     "user_id" => Auth::id(),
+                     "customer_id" => $customer->id,
+                 ]);
+
+                    $keys = ["voucher"];
+                    $values = [VoucherResourse::make($new_voucher)];
+                    return $this->returnData(201, $keys, $values);
+                }
             }
             return $this->returnError(404,"phone number dont exist");
 
-        }
-    catch (\Exception $e){
-            return $e->getMessage();
-        }
+//        }
+//    catch (\Exception $e){
+//            return $e->getMessage();
+//        }
     }
     public function store_image($request){
         $decodedImage =$request->image;
@@ -150,6 +175,12 @@ else {
     }
     public function check_voucher($route)
     {
+        if ($route>1000){
+            return response([
+                "message"=>"voucher not found",
+                "access"=>false,
+            ],404);
+        }
         $voucher = Voucher::where("number_voucher", $route)->first();
         if (!$voucher) {
            return response([

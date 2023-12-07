@@ -30,7 +30,12 @@ class Customer extends Model
     }
 public function net_total_by_id_voucher($number_voucher){
     $voucher= Voucher::where("number_voucher",$number_voucher)->first();
-
-    return (float)  Controller::voucher_value- $voucher->expenses->sum("amount");
+    if ($voucher) {
+        return (float)Controller::voucher_value - $voucher->expenses->sum("amount");
+    }
+    elseif (!$voucher)
+    {
+        return (float)Controller::voucher_value;
+    }
 }
 }
